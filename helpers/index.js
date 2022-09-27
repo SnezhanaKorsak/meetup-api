@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { pool } from '../db.js';
 import * as dotenv from 'dotenv'
+import { meetupService } from '../service/meetup-service.js';
 
 dotenv.config()
 
@@ -36,4 +37,14 @@ export const createUser = async (email, password, role) => {
   const user = await pool.query(sqlQuery, valuesQuery)
 
   return user.rows[0]
+}
+
+export const isOwner = async (meetupId, currentUserId) => {
+  const meetup = await meetupService.getMeetupById(meetupId)
+
+  if(!meetup) {
+    throw new Error('An meetup with this id was not found.')
+  }
+
+  return meetup.rows[0].user_id === currentUserId;
 }
