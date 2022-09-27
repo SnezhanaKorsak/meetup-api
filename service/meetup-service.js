@@ -6,7 +6,6 @@ class MeetupService {
   async getAllMeetups(sortBy, search, order, offset, limit, filters) {
     let sqlQuery = 'SELECT * FROM meetups'
 
-
     if (search) {
       sqlQuery += ` WHERE to_tsvector(title || ' ' || description || ' ' || place) @@ to_tsquery('${search}')`
     }
@@ -20,6 +19,7 @@ class MeetupService {
       const filterQuery = filterValues.map(item => `${item} ILIKE '%${filters[item]}%'`).join(' AND ')
 
       sqlQuery += ` WHERE ${filterQuery}`
+      console.log(sqlQuery)
     }
 
     if (limit && offset) {

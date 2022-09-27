@@ -1,0 +1,550 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Meetups API",
+    "description": "This is a CRUD REST Web API for work with meetups",
+    "version": "0.0.1"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "Meetups",
+      "description": "Everything about your meetings"
+    }
+  ],
+  "paths": {
+    "api/meetups": {
+      "get": {
+        "tags": [
+          "meetups"
+        ],
+        "operationId": "getMeetups",
+        "summary": "Finds meetups by name, description or place of location (ex: title=<title>&place=<place>&time=2022-09-27)",
+        "description": "Sorting, filtering, searching are available",
+        "parameters": [
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Sorting elements by some parameters",
+            "example": "/meetups?sortBy=title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Sort order (DESC or ASC). By default order=ASC",
+            "example": "/meetups?order=DESC",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Searching for elements",
+            "example": "/meetups?search=Node",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Returns the maximum number of elements",
+            "example": "/meetups?limit=5",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Returns the maximum number of elements starting from the specified position",
+            "example": "/meetups?limit=5",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Filter by title",
+            "example": "/meetups?title=React",
+            "required": false,
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "place",
+            "in": "query",
+            "description": "Filter by place",
+            "example": "/meetups?place=online",
+            "required": false,
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Meetup"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "meetups"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "createMeetup",
+        "summary": "Create new meetup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "title": "Node JS",
+                  "description": "Project discussion and code review",
+                  "time": "2022-09-28T17:00:00.000",
+                  "place": "online"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meetup"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/meetups/{meetupId}": {
+      "get": {
+        "tags": [
+          "meetups"
+        ],
+        "operationId": "getMeetupById",
+        "parameters": [
+          {
+            "name": "meetupId",
+            "in": "path",
+            "required": true,
+            "description": "meetup ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Get one meetup by id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meetup"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "meetups"
+        ],
+        "operationId": "updateMeetup",
+        "summary": "Update one meetup",
+        "parameters": [
+          {
+            "name": "meetupId",
+            "in": "path",
+            "required": true,
+            "description": "meetup ID",
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "title": "Node JS",
+                  "description": "Project discussion and code review",
+                  "time": "2022-09-28T17:00:00.000",
+                  "place": "online"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "meetups"
+        ],
+        "operationId": "deleteMeetup",
+        "summary": "Delete one meetup",
+        "parameters": [
+          {
+            "name": "meetupId",
+            "in": "path",
+            "required": true,
+            "description": "meetup ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Meetup was deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "This meetup doesn't exist"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth/registration": {
+      "post": {
+        "tags": [
+          "registration"
+        ],
+        "operationId": "registration",
+        "summary": "User registration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "admin@gmail.com",
+                  "password": "1111",
+                  "roles": "admin"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": "User: {user email} was registered successfully"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth/login": {
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "operationId": "login",
+        "summary": "User login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "admin@admin.com",
+                  "role": "admin"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAzZGU2ODIxLWFiNGUtNDllNy05YjJj",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAzZGU2ODIxLWFiNGUtNDllNy05Yj",
+                  "user": {
+                    "id": "76ad7e67-61fe-4cff-a4b7-777a198d3ca5",
+                    "email": "admin@admin.com",
+                    "role": "admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "default": {
+          "description": "Internal Server Error",
+          "content": {
+            "aplication/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth/logout": {
+      "post": {
+        "tags": [
+          "logout"
+        ],
+        "operationId": "logout",
+        "summary": "User logout",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "example": {
+                  "email": "admin@admin.com",
+                  "role": "admin"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "You are logged out"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal Server Error",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Tag": {
+        "type": "string",
+        "example": "backend, dbms",
+        "xml": {
+          "name": "tag"
+        }
+      },
+      "Meetup": {
+        "required": [
+          "title",
+          "description",
+          "time",
+          "place"
+        ],
+        "type": "object",
+        "properties": {
+          "id_meetup": {
+            "type": "string",
+            "example": "a197dd44-1537-4349-9f41-1c8d58dccbc1"
+          },
+          "title": {
+            "type": "string",
+            "example": "POSTGRESQL"
+          },
+          "description": {
+            "type": "string",
+            "example": "Introductory lesson on the database"
+          },
+          "time": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-09-27T10:00:00.000Z"
+          },
+          "place": {
+            "type": "string",
+            "example": "online"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "example": "error"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      }
+    }
+  }
+}

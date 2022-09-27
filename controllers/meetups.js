@@ -4,6 +4,7 @@ import { meetupService } from "../service/meetup-service.js";
 export const getMeetups = async (req, res) => {
   try {
     const { sortBy, search, order, offset, limit, ...filter } = req.query
+
     const meetups = await meetupService.getAllMeetups(sortBy, search, order, offset, limit, filter)
     res.status(responseStatus.success).json(meetups.rows)
   } catch (error) {
