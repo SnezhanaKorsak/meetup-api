@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { responseStatus } from "../constants/index.js";
 
 export const getMeetups = async (req, res) => {
-  let sqlQuery = 'SELECT * FROM meetup'
+  let sqlQuery = 'SELECT * FROM meetups'
   const {sortBy, search, order, offset, limit, ...filter} = req.query
 
   if (search) {
@@ -35,7 +35,7 @@ export const getMeetups = async (req, res) => {
 
 export const getMeetupById = async (req, res) => {
   const id = req.params.id
-  const sqlQuery = 'SELECT * FROM meetup where meetup_id = $1'
+  const sqlQuery = 'SELECT * FROM meetups where id = $1'
   const valuesQuery = [id]
 
   try {
@@ -50,7 +50,7 @@ export const createMeetup = async (req, res) => {
   const id = uuid();
   const {title, description, time, place} = req.body
   // const {id: person_id} = req.user
-  const sqlQuery = 'INSERT INTO meetup (meetup_id, title, description, time, place) values($1, $2, $3, $4, $5) RETURNING *'
+  const sqlQuery = 'INSERT INTO meetups (id, title, description, time, place) values($1, $2, $3, $4, $5) RETURNING *'
   const valuesQuery = [id, title, description, time, place]
 
   try {
@@ -65,7 +65,7 @@ export const createMeetup = async (req, res) => {
 export const updateMeetup = async (req, res) => {
   const id = req.params.id
   const {title, description, time, place} = req.body
-  const sqlQuery = 'UPDATE meetup set title = $1, description = $2, time = $3, place = $4 where meetup_id = $5 RETURNING *'
+  const sqlQuery = 'UPDATE meetups set title = $1, description = $2, time = $3, place = $4 where id = $5 RETURNING *'
   const valuesQuery = [title, description, time, place, id]
 
   try {
@@ -78,7 +78,7 @@ export const updateMeetup = async (req, res) => {
 
 export const deleteMeetup = async (req, res) => {
   const id = req.params.id
-  const sqlQuery = 'DELETE FROM meetup where meetup_id = $1'
+  const sqlQuery = 'DELETE FROM meetups where id = $1'
   const valuesQuery = [id]
 
   try {
